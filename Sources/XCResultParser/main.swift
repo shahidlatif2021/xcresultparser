@@ -115,7 +115,7 @@ do {
         }
     }
     
-    let output = ReportResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults)
+    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults)
 
     // Write results to JSON
     if reportFormat == "json" {
@@ -177,7 +177,7 @@ func processSubtests(_ subtests: [ActionTestMetadata], in testSuite: inout TestS
 }
 
 /// Writes the structured test results to a JSON file
-func writeTestResultsToJSON(_ testResults: ReportResults, outputPath: String) throws {
+func writeTestResultsToJSON(_ testResults: TestRunResults, outputPath: String) throws {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
 

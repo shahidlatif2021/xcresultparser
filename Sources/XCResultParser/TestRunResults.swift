@@ -5,7 +5,7 @@
 //  Created by Shahid Latif on 12/03/2025.
 //
 
-struct ReportResults: Codable {
+struct TestRunResults: Codable {
     let testPlanName: String
     let totalTimeTaken: String
     let totalTestCases: Int

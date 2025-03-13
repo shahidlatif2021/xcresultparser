@@ -8,7 +8,7 @@
 import TPPDF
 import Foundation
 
-func generatePDF(testResults: ReportResults, outputPath: String) {
+func generatePDF(testResults: TestRunResults, outputPath: String) {
     let document = PDFDocument(format: .a4)
     
     // 📌 Header Section
