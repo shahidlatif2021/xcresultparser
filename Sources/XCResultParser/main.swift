@@ -9,7 +9,7 @@ let arguments = CommandLine.arguments.dropFirst()
 
 var inputPath: String?
 var outputPath: String?
-var reportFormat: String?
+var reportFormat: String? = "json"
 
 var index = 1
 while index < arguments.count {
@@ -65,18 +65,22 @@ do {
     let notFound = "❌ Not Found in test plan"
 
     let actions = invocationRecords!.actions
-    guard let actionResult = actions.first?.actionResult else {
+    
+    let filteredRecords = actions.filter { record in
+        // Check if testsRef is not nil and id is not nil
+        return record.actionResult.testsRef?.id != nil
+    }
+    guard let actionResult = filteredRecords.first?.actionResult else {
         print("❌ No action result found.")
         exit(1)
     }
     
-    guard let action = actions.first else {
+    guard let action = filteredRecords.first else {
         print("❌ No action found")
         exit(1)
     }
     
     
-
     let testSummaries = resultFile.getTestPlanRunSummaries(id: actionResult.testsRef?.id ?? "")
     
     let testPlanName = action.testPlanName ?? notFound
@@ -167,7 +171,11 @@ func processSubtests(_ subtests: [ActionTestMetadata], in testSuite: inout TestS
         }
         
         let testCases = textAttachments(resultFile: resultFile, subtest: subtest)
-        let testCasesArray = testCases.components(separatedBy: "\n").map( { String($0) })
+        var testCasesArray = testCases.components(separatedBy: "\n").map( { String($0) })
+        if testCasesArray.count > 15 {
+            testCasesArray = []
+        }
+        
         // Create test case object
         let testCase = TestCase(name: subtest.name ?? "", status: subtest.testStatus, duration: subtest.duration ?? 0, errorMessage: errorMessage, textCases: testCasesArray)
 
