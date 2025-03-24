@@ -64,15 +64,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-input /Users/shahid.latif/Downloads/Test_20Report/Test-Al-Mosafer_Dev-2025.03.09_10-21-06-+0300.xcresult"
+            argument = "-input /Users/shahid.latif/temp/report_upload/Al-Mosafer_Dev.xcresult"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-output  /Users/shahid.latif/Downloads/Test_20Report\ 2/abc_another.json"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-reportFormat json"
+            argument = "-output /Users/shahid.latif/temp/report_upload/output.json"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
