@@ -64,6 +64,14 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "-versionNumber 8.46.0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-buildNumber 52240"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-input /Users/shahid.latif/temp/report_upload/Al-Mosafer_Dev.xcresult"
             isEnabled = "YES">
          </CommandLineArgument>

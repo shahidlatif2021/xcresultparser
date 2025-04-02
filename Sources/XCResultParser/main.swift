@@ -37,9 +37,10 @@ while index < arguments.count {
         if index + 1 < (arguments.count + 1) {
             buildNumber = arguments[index + 1].lowercased()
         }
-    case "-verionsNumber":
+    case "-versionNumber":
         if index + 1 < (arguments.count + 1) {
             verionsNumber = arguments[index + 1].lowercased()
+            index += 1
         }
     default:
         break
@@ -50,7 +51,7 @@ while index < arguments.count {
 // Validate required arguments
 guard let input = inputPath, let output = outputPath, let format = reportFormat, let bNumber = buildNumber, let vNumber = verionsNumber else {
     print("❌ Missing required parameters")
-    print("Usage: XCResultParse -input <Path> -output <Path with file> -reportFormat <json/pdf> -buildVersion <abc> -versionNumber <oxy>")
+    print("Usage: XCResultParse -input <Path> -output <Path with file> -reportFormat <json/pdf> -buildNumber <abc> -versionNumber <oxy>")
     exit(1)
 }
 
