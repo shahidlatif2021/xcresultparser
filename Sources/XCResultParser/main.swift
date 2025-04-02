@@ -119,7 +119,8 @@ do {
         }
     }
     
-    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults)
+    let currentEpochTime = Int(Date().timeIntervalSince1970 * 1000)
+    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults, runId: "ios-\(currentEpochTime)")
 
     // Write results to JSON
     if reportFormat == "json" {
@@ -139,8 +140,8 @@ do {
 func categorizeTestSuite(_ testSuiteName: String) -> String {
     switch testSuiteName {
     case let name where name.starts(with: "Hotel"):
-        return "Hotel"
-    case let name where name.starts(with: "Activity"):
+        return "Hotels"
+    case let name where name.starts(with: "Activities"):
         return "Activities"
     case let name where name.starts(with: "Account"):
         return "MyAccount"

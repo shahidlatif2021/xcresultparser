@@ -13,4 +13,5 @@ struct TestRunResults: Codable {
     let deviceName: String
     let deviceOS: String
     let testResults: [String: TestCategory]
+    let runId: String
 }
