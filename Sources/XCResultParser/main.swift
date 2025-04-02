@@ -10,6 +10,8 @@ let arguments = CommandLine.arguments.dropFirst()
 var inputPath: String?
 var outputPath: String?
 var reportFormat: String? = "json"
+var buildNumber: String?
+var verionsNumber: String?
 
 var index = 1
 while index < arguments.count {
@@ -31,6 +33,14 @@ while index < arguments.count {
             reportFormat = arguments[index + 1].lowercased()
             index += 1
         }
+    case "-buildNumber":
+        if index + 1 < (arguments.count + 1) {
+            buildNumber = arguments[index + 1].lowercased()
+        }
+    case "-verionsNumber":
+        if index + 1 < (arguments.count + 1) {
+            verionsNumber = arguments[index + 1].lowercased()
+        }
     default:
         break
     }
@@ -38,9 +48,9 @@ while index < arguments.count {
 }
 
 // Validate required arguments
-guard let input = inputPath, let output = outputPath, let format = reportFormat else {
+guard let input = inputPath, let output = outputPath, let format = reportFormat, let bNumber = buildNumber, let vNumber = verionsNumber else {
     print("❌ Missing required parameters")
-    print("Usage: XCResultParse -input <Path> -output <Path with file> --reportFormat <json/pdf>")
+    print("Usage: XCResultParse -input <Path> -output <Path with file> -reportFormat <json/pdf> -buildVersion <abc> -versionNumber <oxy>")
     exit(1)
 }
 
@@ -120,7 +130,7 @@ do {
     }
     
     let currentEpochTime = Int(Date().timeIntervalSince1970 * 1000)
-    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults, runId: "ios-\(currentEpochTime)")
+    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults, runId: "ios-\(currentEpochTime)", buildNumber: bNumber, versionNumber: vNumber)
 
     // Write results to JSON
     if reportFormat == "json" {
