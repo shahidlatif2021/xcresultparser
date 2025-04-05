@@ -67,6 +67,8 @@ print("✅ Output File: \(output)")
 print("✅ Report Format: \(format)")
 print("✅ Report token is \(ProcessInfo.processInfo.environment["CUSTOM_REPORT_TOKEN"] ?? tokenNotFound)")
 
+let bearerToken = ProcessInfo.processInfo.environment["CUSTOM_REPORT_TOKEN"] ?? "N/A"
+
 
 // Ensure that the user provided the xcresult path argumentvar testResults: [String: TestCategory] = [:]
 var testResults = [String: TestCategory]()
@@ -242,7 +244,7 @@ func uploadJSONReport(output: String) {
     request.httpMethod = "POST"
     
     // Add headers
-    request.addValue("Bearer 05797f1f99f0ccb7cd8fe17500fddbfdb641ece1b30eda92abdf7be0953f9446", forHTTPHeaderField: "Authorization")
+    request.addValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
     let fileURL = URL(fileURLWithPath: output)
