@@ -10,8 +10,8 @@ let arguments = CommandLine.arguments.dropFirst()
 var inputPath: String?
 var outputPath: String?
 var reportFormat: String? = "json"
-var buildNumber: String?
-var verionsNumber: String?
+var buildNumber: String? = "50267"
+var verionsNumber: String? =  "8.47.0"
 
 var index = 1
 while index < arguments.count {
@@ -61,9 +61,11 @@ guard format == "json" || format == "pdf" else {
 }
 
 // Debugging logs
+let tokenNotFound = "Report token not found from environment variable"
 print("✅ Input File: \(input)")
 print("✅ Output File: \(output)")
 print("✅ Report Format: \(format)")
+print("✅ Report token is \(ProcessInfo.processInfo.environment["CUSTOM_REPORT_TOKEN"] ?? tokenNotFound)")
 
 
 // Ensure that the user provided the xcresult path argumentvar testResults: [String: TestCategory] = [:]
@@ -131,14 +133,15 @@ do {
     }
     
     let currentEpochTime = Int(Date().timeIntervalSince1970 * 1000)
-    let output = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults, runId: "ios-\(currentEpochTime)", buildNumber: bNumber, versionNumber: vNumber)
+    let outputJson = TestRunResults(testPlanName: testPlanName, totalTimeTaken: totalTimeTaken, totalTestCases: totalTestCases, failedTestCases: failedTestCases, deviceName: deviceName, deviceOS: deviceOS, testResults: testResults, runId: "ios-\(currentEpochTime)", buildNumber: bNumber, versionNumber: vNumber)
 
     // Write results to JSON
     if reportFormat == "json" {
-        try writeTestResultsToJSON(output, outputPath: outputPath!)
+        try writeTestResultsToJSON(outputJson, outputPath: outputPath!)
     } else if reportFormat == "pdf" {
-        generatePDF(testResults: output, outputPath: outputPath!)
+        generatePDF(testResults: outputJson, outputPath: outputPath!)
     }
+    uploadJSONReport(output: output)
 
 } catch {
     print("❌ Error : \(error)")
@@ -154,7 +157,7 @@ func categorizeTestSuite(_ testSuiteName: String) -> String {
         return "Hotels"
     case let name where name.starts(with: "Activities"):
         return "Activities"
-    case let name where name.starts(with: "Account"):
+    case let name where name.starts(with: "MyAccount"):
         return "MyAccount"
     case let name where name.starts(with: "Home"):
         return "Home"
@@ -232,4 +235,53 @@ func textAttachments(resultFile: XCResultFile, subtest: ActionTestMetadata) -> S
         }
         .first ?? "" // Return only the first valid attachment text
 }
+
+func uploadJSONReport(output: String) {
+    let url = URL(string: "https://automation-insights.almosafer.io/api/dump/ios")!
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    
+    // Add headers
+    request.addValue("Bearer 05797f1f99f0ccb7cd8fe17500fddbfdb641ece1b30eda92abdf7be0953f9446", forHTTPHeaderField: "Authorization")
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    let fileURL = URL(fileURLWithPath: output)
+    
+    // Semaphore to wait for the async task
+    let semaphore = DispatchSemaphore(value: 0)
+
+    do {
+        let jsonData = try Data(contentsOf: fileURL)
+        request.httpBody = jsonData
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            defer { semaphore.signal() }
+
+            if let error = error {
+                print("❌ Error: \(error)")
+                return
+            }
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("✅ Status Code: \(httpResponse.statusCode)")
+            }
+
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("📥 Response: \(responseString)")
+            }
+        }
+
+        task.resume()
+        
+        // Wait until the network call finishes (with a timeout to prevent hanging)
+        let timeout = DispatchTime.now() + .seconds(30)
+        if semaphore.wait(timeout: timeout) == .timedOut {
+            print("⚠️ Upload timed out")
+        }
+
+    } catch {
+        print("❌ Failed to read JSON file: \(error)")
+    }
+}
+
 
