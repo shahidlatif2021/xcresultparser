@@ -67,7 +67,7 @@ print("✅ Output File: \(output)")
 print("✅ Report Format: \(format)")
 
 
-let bearerToken = ProcessInfo.processInfo.environment["CUSTOM_REPORT_TOKEN"]
+let bearerToken = ProcessInfo.processInfo.environment["UITESTS_REPORT_TOKEN"]
 
 guard let token = bearerToken else {
     print("❌ Report token is not set exiting utility")
@@ -76,12 +76,18 @@ guard let token = bearerToken else {
 
 let xcresultParser = XCResultParser(xcResultFilePath: inputPath!, buildNumber: buildNumber!, versionNumber: verionsNumber!, outputPath: output)
 let reportUploader = ReportUploader(jsonPath: outputPath!, token: token)
-let imagesDirectoryPath = URL(fileURLWithPath: output).deletingLastPathComponent().path + "/\(xcresultParser.runId)"
+let zipHelper = ZipHelper()
+let outputDirectoryPath = URL(fileURLWithPath: output).deletingLastPathComponent().path
+let imagesDirectoryPath = outputDirectoryPath + "/\(xcresultParser.runId)"
+let zipReportImagesName = "\(xcresultParser.runId).zip"
+
 FileHelper.createDirectoryIfNeeded(at: imagesDirectoryPath)
 do {
-    let results = try xcresultParser.parseResults()
-    try JSONReportWriter.write(results: results, to: output)
-    reportUploader.upload(testResults: results)
+    let testRunResults = try xcresultParser.parseResults()
+    try JSONReportWriter.write(results: testRunResults, to: output)
+    let url = try zipHelper.zipFolder(folderURL: URL(fileURLWithPath: imagesDirectoryPath), zipFileName: zipReportImagesName)
+    print("Zip folder url: \(url)")
+    reportUploader.upload(testResults: testRunResults)
 } catch {
     print("Error")
 }

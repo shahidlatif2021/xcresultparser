@@ -10,14 +10,16 @@ import Foundation
 class ReportUploader {
     var jsonPath: String
     var token: String
+    var serverURL: String
     
     init(jsonPath: String, token: String) {
         self.jsonPath = jsonPath
         self.token = token
+        self.serverURL = "https://automation-insights.almosafer.io/api/dump/ios"
     }
     
     func upload(testResults: TestRunResults) {
-        guard let url = URL(string: "https://automation-insights.almosafer.io/api/dump/ios") else { return }
+        guard let url = URL(string: serverURL) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
