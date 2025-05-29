@@ -37,6 +37,6 @@ struct TestCase: Codable {
     let status: String?
     let duration: Double
     let errorMessage: String?
-    let textCases: [String]
+    let testCases: [String]
     let testImages:[String]?
 }

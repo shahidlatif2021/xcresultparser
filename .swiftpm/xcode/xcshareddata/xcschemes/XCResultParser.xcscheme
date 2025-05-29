@@ -72,11 +72,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-input /Users/shahid.latif/temp/report_upload/Test-Al-Mosafer_Dev-2025.04.04_09-05-33-+0400.xcresult"
+            argument = "-input /Users/shahid.latif/temp/Report\ Final\ testing/Test_20Report/Al-Mosafer_Dev.xcresult"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-output /Users/shahid.latif/temp/report_upload/output_final2.json"
+            argument = "-output /Users/shahid.latif/temp/Report\ Final\ testing/Test_20Report/Al-Mosafer_Dev.json"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

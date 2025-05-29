@@ -61,6 +61,8 @@ class XCResultParser {
         let testPlanName = action.testPlanName ?? "❌ Not Found in test plan"
         let duration = FormatterHelper.timeDifference(start: action.startedTime, end: action.endedTime)
         
+        print("Total test cases: \(result.metrics.testsCount ?? -1)")
+        print("Failed test cases: \(result.metrics.testsFailedCount ?? -1)")
 
         return TestRunResults(
             testPlanName: testPlanName,
@@ -105,7 +107,7 @@ class XCResultParser {
                 status: subtest.testStatus,
                 duration: subtest.duration ?? 0,
                 errorMessage: errorMessage,
-                textCases: testCases,
+                testCases: testCases,
                 testImages: testCaseImages
             )
             suite.tests.append(testCase)
